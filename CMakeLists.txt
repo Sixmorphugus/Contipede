@@ -16,6 +16,11 @@ add_executable(Contipede ${CONT_SRC})
 if(WIN32)
 	set(CURSES_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/extlibs/pdcurses")
 	set(CURSES_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/extlibs/pdcurses/pdcurses.lib")
+	
+	# do the normal trick to ensure that the dll is autocopied
+	add_custom_command(TARGET Contipede POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/pdcurses/pdcurses.dll $<TARGET_FILE_DIR:Contipede>/pdcurses.dll
+	)
 else()
 	find_package(Curses REQUIRED)
 endif()
