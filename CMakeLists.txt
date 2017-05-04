@@ -1,5 +1,6 @@
 # I wrote a cmake file to eliminate troubles with different IDEs and operating systems
 # if you have cmake just make a directory called "build" and do "cmake .."
+# if there's still no cmake on the university computers I will have provided a file called buildlinuxnocmake as well as buildlinux.
 cmake_minimum_required(VERSION 3.6)
 
 project(Contipede)
@@ -11,6 +12,7 @@ file(GLOB CONT_SRC
 )
 
 add_executable(Contipede ${CONT_SRC})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # This project will need ncurses/pdcurses depending on whether you're on windows or linux. This finds both:
 if(WIN32)
