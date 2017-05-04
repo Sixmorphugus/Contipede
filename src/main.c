@@ -6,23 +6,18 @@
 #include "main.h"
 
 #define FRAMETIME 33
-#define TESTSTRING "Hello, world!"
-
-/* --------------- */
-
-int hwPosition = 0;
-int hwSpeed = 1;
-
-/* --------------- */
 
 int main() {
 	/* Start curses mode! */
 	initscr();
 
+	start_color(); // allow us to color things
 	keypad(stdscr, TRUE); // allow the use of keys
 	noecho(); // don't echo getch input
-	curs_set(FALSE); // Don't display a cursor
+	curs_set(FALSE); // don't display a cursor
+	cbreak(); // don't newline automatically
 
+	// the game loop is as follows:
 	while (update()) {
 		draw();
 	}
@@ -33,13 +28,10 @@ int main() {
 }
 
 int update() {
-	hwPosition += hwSpeed;
+	// handle input
+	int ch = getch();
 
-	if (hwPosition + strlen(TESTSTRING) > getmaxx(stdscr))
-		hwSpeed = -1;
 
-	if (hwPosition <= 0)
-		hwSpeed = 1;
 
 	u_waitms(FRAMETIME);
 	return 1;
@@ -48,7 +40,7 @@ int update() {
 void draw() {
 	erase(); // erase the window
 
-	mvprintw(0, hwPosition, TESTSTRING);
+	
 
 	refresh();
 }
