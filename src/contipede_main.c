@@ -2,7 +2,7 @@
 // Main Function file
 
 #include "curses.h"
-#include "utils.h"
+#include "contipede_utils.h"
 #include "main.h"
 
 #define FRAMETIME 33
@@ -31,9 +31,10 @@ int update() {
 	// handle input
 	int ch = getch();
 
+	if (ch == KEY_EXIT)
+		return 0;
 
-
-	u_waitms(FRAMETIME);
+	cont_util_waitms(FRAMETIME);
 	return 1;
 }
 
