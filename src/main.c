@@ -2,8 +2,10 @@
 // Main Function file
 
 #include "curses.h"
-#include "contipede_utils.h"
 #include "main.h"
+
+#include "contipede_utils.h"
+#include "contipede_ship.h"
 
 #define FRAMETIME 33
 
@@ -14,8 +16,11 @@ int main() {
 	start_color(); // allow us to color things
 	keypad(stdscr, TRUE); // allow the use of keys
 	noecho(); // don't echo getch input
+	timeout(0); // don't block with getch
 	curs_set(FALSE); // don't display a cursor
 	cbreak(); // don't newline automatically
+
+	cont_ship_init();
 
 	// the game loop is as follows:
 	while (update()) {
@@ -34,6 +39,10 @@ int update() {
 	if (ch == KEY_EXIT)
 		return 0;
 
+	cont_ship_sendch(ch);
+
+	cont_ship_update();
+
 	cont_util_waitms(FRAMETIME);
 	return 1;
 }
@@ -41,7 +50,7 @@ int update() {
 void draw() {
 	erase(); // erase the window
 
-	
+	cont_ship_draw();
 
 	refresh();
 }
