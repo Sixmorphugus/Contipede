@@ -41,8 +41,10 @@ int update() {
 
 	cont_ship_sendch(ch);
 
+	// update things
 	cont_ship_update();
 
+	// wait before processing another game tick
 	cont_util_waitms(FRAMETIME);
 	return 1;
 }

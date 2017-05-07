@@ -15,7 +15,7 @@ void cont_ship_init()
 {
 	// position the ship properly onscreen
 	ship_x = getmaxx(stdscr) / 2;
-	ship_y = getmaxy(stdscr) - 1;
+	ship_y = getmaxy(stdscr) - 3;
 
 	ship_state = ship_state_NORMAL;
 
@@ -117,6 +117,9 @@ void cont_ship_draw()
 
 	// draw the ship onscreen
 	mvprintw(ship_y, ship_x, "^");
+	mvprintw(ship_y + 1, ship_x - 1, "/");
+	mvprintw(ship_y + 1, ship_x, "_");
+	mvprintw(ship_y + 1, ship_x + 1, "\\");
 }
 
 void cont_ship_fire()
