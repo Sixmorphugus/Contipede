@@ -1,4 +1,4 @@
-#include "contipede_utils.h"
+#include "contipede_platform.h"
 
 // are we using the windows sleep function or the unix one?
 // unix uses microseconds, windows uses milliseconds
@@ -12,6 +12,6 @@
 #define MSTIME 1000
 #endif
 
-void cont_util_waitms(int numMS) {
+void cont_plat_waitms(int numMS) {
 	PSLEEP(numMS * MSTIME);
 }

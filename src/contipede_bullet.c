@@ -1,5 +1,6 @@
 // DEFS
 #define BULLET_LIMIT 10
+#define BULLET_COLOR COLOR_CYAN
 
 // included files
 #include "curses.h"
@@ -7,6 +8,7 @@
 #include "contipede_bullet.h"
 #include "contipede_ship.h" // for ship collision
 #include "contipede_debug.h"
+#include "contipede_colorpairs.h"
 
 // bullet data structure and storage
 typedef struct {
@@ -131,6 +133,8 @@ void cont_bullets_init()
 	for (unsigned int i = 0; i < BULLET_LIMIT; i++) {
 		bullet_data_array[i].used = 0;
 	}
+
+	init_pair(cont_colorpair_bullet, BULLET_COLOR, COLOR_BLACK);
 }
 
 int cont_bullet_create(char icon, int friendly, int y, int x, int vS, int hS)
@@ -216,7 +220,9 @@ void cont_bullet_draw(int id)
 	str[1] = '\0';
 
 	// draw it
+	attron(COLOR_PAIR(cont_colorpair_bullet));
 	mvprintw(bullet_data_array[id].y, bullet_data_array[id].x, str);
+	attroff(COLOR_PAIR(cont_colorpair_bullet));
 }
 
 void cont_bullets_destroy()

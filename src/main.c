@@ -4,8 +4,10 @@
 #include "curses.h"
 #include "main.h"
 
-#include "contipede_utils.h"
+#include "contipede_platform.h"
 #include "contipede_ship.h"
+#include "contipede_bullet.h"
+#include "contipede_debug.h"
 
 #define FRAMETIME 10
 
@@ -50,7 +52,7 @@ int update() {
 	cont_bullets_update();
 
 	// wait before processing another game tick
-	cont_util_waitms(FRAMETIME);
+	cont_plat_waitms(FRAMETIME);
 	return 1;
 }
 

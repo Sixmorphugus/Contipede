@@ -1,5 +1,6 @@
 #include "curses.h"
 #include "contipede_debug.h"
+#include "contipede_colorpairs.h"
 
 #define DEBUG_LINES 15
 #define DEBUG_TEXT_LENGTH 50
@@ -9,7 +10,7 @@ int debug_cur_line;
 
 cont_debug_init()
 {
-	init_pair(1, COLOR_BLACK, COLOR_WHITE);
+	init_pair(cont_colorpair_debug, COLOR_BLACK, COLOR_WHITE);
 	cont_debug_clear();
 }
 
