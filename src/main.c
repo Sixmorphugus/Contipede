@@ -7,7 +7,7 @@
 #include "contipede_utils.h"
 #include "contipede_ship.h"
 
-#define FRAMETIME 33
+#define FRAMETIME 10
 
 int main() {
 	/* Start curses mode! */
@@ -21,6 +21,10 @@ int main() {
 	cbreak(); // don't newline automatically
 
 	cont_ship_init();
+	cont_bullets_init();
+	cont_debug_init();
+
+	cont_debug("Contipede test version");
 
 	// the game loop is as follows:
 	while (update()) {
@@ -43,6 +47,7 @@ int update() {
 
 	// update things
 	cont_ship_update();
+	cont_bullets_update();
 
 	// wait before processing another game tick
 	cont_util_waitms(FRAMETIME);
@@ -53,6 +58,9 @@ void draw() {
 	erase(); // erase the window
 
 	cont_ship_draw();
+	cont_bullets_draw();
+
+	cont_debug_draw();
 
 	refresh();
 }

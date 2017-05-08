@@ -1,6 +1,8 @@
 #include "curses.h"
 
 #include "contipede_ship.h"
+#include "contipede_bullet.h"
+#include "contipede_debug.h"
 
 // -- SHIP GLOBAL VARIABLES --
 // only accessable within this C file
@@ -39,7 +41,7 @@ void cont_ship_sendch(int ch)
 	else if (ch == KEY_RIGHT) {
 		cont_ship_moveh(1);
 	}
-	else if (ch == KEY_ENTER) {
+	else if (ch == KEY_UP) {
 		cont_ship_fire();
 	}
 }
@@ -124,5 +126,5 @@ void cont_ship_draw()
 
 void cont_ship_fire()
 {
-	// TODO
+	cont_bullet_create('*', 1, ship_y - 1, ship_x, -1, 0);
 }
