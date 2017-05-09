@@ -15,6 +15,7 @@ typedef struct
 	int x, y;
 	int health, maxhealth;
 	char icon;
+	int used;
 } debris_data;
 
 debris_data debris_data_array[DEBRIS_LIMIT];

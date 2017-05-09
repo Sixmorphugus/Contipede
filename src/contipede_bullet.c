@@ -9,11 +9,13 @@
 #include "contipede_ship.h" // for ship collision
 #include "contipede_debug.h"
 #include "contipede_colorpairs.h"
+#include "contipede_timer.h"
 
 // bullet data structure and storage
 typedef struct {
 	char icon;
 	int hSpeed, vSpeed;
+	int hTimer, vTimer;
 	int x, y;
 	int friendlyBullet;
 	int used;
@@ -108,7 +110,8 @@ void cont_bullet_set_hspeed(int id, int h)
 	if (!cont_bullet_exists(id))
 		return;
 
-	bullet_data_array[id].hSpeed = h;
+	bullet_data_array[id].hSpeed = h / abs(h);
+	cont_timer_set(bullet_data_array[id].hTimer, cont_plat_timeout_from_speed(h));
 }
 
 void cont_bullet_set_vspeed(int id, int v)
@@ -116,16 +119,14 @@ void cont_bullet_set_vspeed(int id, int v)
 	if (!cont_bullet_exists(id))
 		return;
 
-	bullet_data_array[id].vSpeed = v;
+	bullet_data_array[id].vSpeed = v / abs(v);
+	cont_timer_set(bullet_data_array[id].vTimer, cont_plat_timeout_from_speed(v));
 }
 
 void cont_bullet_set_vhspeed(int id, int v, int h)
 {
-	if (!cont_bullet_exists(id))
-		return;
-
-	bullet_data_array[id].vSpeed = v;
-	bullet_data_array[id].hSpeed = h;
+	cont_bullet_set_vspeed(id, v);
+	cont_bullet_set_hspeed(id, h);
 }
 
 void cont_bullets_init()
@@ -144,18 +145,27 @@ int cont_bullet_create(char icon, int friendly, int y, int x, int vS, int hS)
 		if (!bullet_data_array[i].used) {
 			bullet_data* b = &bullet_data_array[i];
 
-			b->used = 1;
 			b->icon = icon;
 			b->friendlyBullet = friendly;
 			b->x = x;
 			b->y = y;
-			b->hSpeed = hS;
-			b->vSpeed = vS;
+			b->hSpeed = hS / abs(hS);
+			b->vSpeed = vS / abs(vS);
+			b->hTimer = cont_timer_create(cont_plat_timeout_from_speed(hS));
+			b->vTimer = cont_timer_create(cont_plat_timeout_from_speed(vS));
+
+			if (b->hTimer == -1 || b->vTimer == -1) {
+				cont_debug("Failed to create a new bullet - timer limit hit");
+				return -1;
+			}
+
+			b->used = 1;
 
 			return i;
 		}
 	}
 
+	cont_debug("Failed to create a new bullet - limit hit");
 	return -1; // unable to create new bullet because too many already exist
 }
 
@@ -190,6 +200,10 @@ void cont_bullet_destroy(int id)
 	if (!cont_bullet_exists(id))
 		return;
 
+	// free timers before declaring this bullet to be "free"
+	cont_timer_destroy(bullet_data_array[id].hTimer);
+	cont_timer_destroy(bullet_data_array[id].vTimer);
+
 	bullet_data_array[id].used = 0;
 }
 
@@ -201,12 +215,13 @@ void cont_bullet_update(int id)
 	bullet_data* b = &bullet_data_array[id];
 
 	// move bullet on
-	b->x += b->hSpeed;
-	b->y += b->vSpeed;
+	if (cont_timer_finished_reset(b->hTimer))
+		b->x += b->hSpeed;
+	if (cont_timer_finished_reset(b->vTimer))
+		b->y += b->vSpeed;
 
-	if (cont_bullet_hit_screenedge(id)) {
+	if (cont_bullet_hit_screenedge(id))
 		cont_bullet_destroy(id);
-	}
 }
 
 void cont_bullet_draw(int id)
