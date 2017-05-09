@@ -1,5 +1,5 @@
 // DEFS
-#define BULLET_LIMIT 10
+#define BULLET_LIMIT 100
 #define BULLET_COLOR COLOR_CYAN
 
 // included files
@@ -167,7 +167,7 @@ int cont_bullet_exists(int id)
 	return bullet_data_array[id].used > 0;
 }
 
-int cont_bullet_get_count()
+int cont_bullets_get_count()
 {
 	int num = 0;
 
@@ -180,7 +180,7 @@ int cont_bullet_get_count()
 	return num;
 }
 
-int cont_bullet_get_limit()
+int cont_bullets_get_limit()
 {
 	return BULLET_LIMIT;
 }

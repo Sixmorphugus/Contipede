@@ -38,8 +38,8 @@ void cont_bullets_init();
 
 int cont_bullet_create(char icon, int friendly, int y, int x, int vS, int hS);
 int cont_bullet_exists(int id);
-int cont_bullet_get_count();
-int cont_bullet_get_limit();
+int cont_bullets_get_count();
+int cont_bullets_get_limit();
 
 void cont_bullet_destroy(int id);
 void cont_bullet_update(int id);

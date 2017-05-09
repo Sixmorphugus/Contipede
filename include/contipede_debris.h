@@ -25,8 +25,9 @@ void cont_alldrbris_generaterandom(int count);
 
 int cont_debris_create(char icon, int health, int y, int x);
 int cont_debris_exists(int id);
-int cont_debris_get_count();
-int cont_debris_get_limit();
+
+int cont_alldebris_get_count();
+int cont_alldebris_get_limit();
 
 void cont_debris_destroy(int id);
 void cont_debris_update(int id);
