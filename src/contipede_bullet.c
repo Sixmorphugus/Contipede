@@ -4,12 +4,14 @@
 
 // included files
 #include "curses.h"
+#include <math.h>
 
 #include "contipede_bullet.h"
 #include "contipede_ship.h" // for ship collision
 #include "contipede_debug.h"
 #include "contipede_colorpairs.h"
 #include "contipede_timer.h"
+#include "contipede_platform.h"
 
 // bullet data structure and storage
 typedef struct {
@@ -110,7 +112,7 @@ void cont_bullet_set_hspeed(int id, int h)
 	if (!cont_bullet_exists(id))
 		return;
 
-	bullet_data_array[id].hSpeed = h / abs(h);
+	bullet_data_array[id].hSpeed = cont_plat_speed_increment(h);
 	cont_timer_set(bullet_data_array[id].hTimer, cont_plat_timeout_from_speed(h));
 }
 
@@ -119,7 +121,7 @@ void cont_bullet_set_vspeed(int id, int v)
 	if (!cont_bullet_exists(id))
 		return;
 
-	bullet_data_array[id].vSpeed = v / abs(v);
+	bullet_data_array[id].vSpeed = cont_plat_speed_increment(v);
 	cont_timer_set(bullet_data_array[id].vTimer, cont_plat_timeout_from_speed(v));
 }
 
@@ -142,20 +144,21 @@ int cont_bullet_create(char icon, int friendly, int y, int x, int vS, int hS)
 {
 	// find first empty bullet slot
 	for (unsigned int i = 0; i < BULLET_LIMIT; i++) {
-		if (!bullet_data_array[i].used) {
+		if (!cont_bullet_exists(i)) {
 			bullet_data* b = &bullet_data_array[i];
 
 			b->icon = icon;
 			b->friendlyBullet = friendly;
 			b->x = x;
 			b->y = y;
-			b->hSpeed = hS / abs(hS);
-			b->vSpeed = vS / abs(vS);
+			b->hSpeed = cont_plat_speed_increment(hS);
+			b->vSpeed = cont_plat_speed_increment(vS);
 			b->hTimer = cont_timer_create(cont_plat_timeout_from_speed(hS));
 			b->vTimer = cont_timer_create(cont_plat_timeout_from_speed(vS));
 
 			if (b->hTimer == -1 || b->vTimer == -1) {
 				cont_debug("Failed to create a new bullet - timer limit hit");
+				cont_timer_destroy(b->hTimer);
 				return -1;
 			}
 
@@ -217,8 +220,10 @@ void cont_bullet_update(int id)
 	// move bullet on
 	if (cont_timer_finished_reset(b->hTimer))
 		b->x += b->hSpeed;
-	if (cont_timer_finished_reset(b->vTimer))
+	if (cont_timer_finished_reset(b->vTimer)) {
 		b->y += b->vSpeed;
+		//cont_debug("boop");
+	}
 
 	if (cont_bullet_hit_screenedge(id))
 		cont_bullet_destroy(id);

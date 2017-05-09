@@ -4,6 +4,7 @@
 #include "curses.h"
 #include "main.h"
 
+#include "contipede_timer.h"
 #include "contipede_platform.h"
 #include "contipede_ship.h"
 #include "contipede_bullet.h"
@@ -20,6 +21,7 @@ int main() {
 	curs_set(FALSE); // don't display a cursor
 	cbreak(); // don't newline automatically
 
+	cont_timers_init();
 	cont_ship_init();
 	cont_bullets_init();
 	cont_debug_init();
@@ -46,6 +48,7 @@ int update() {
 	cont_ship_sendch(ch);
 
 	// update things
+	cont_timers_update();
 	cont_ship_update();
 	cont_bullets_update();
 

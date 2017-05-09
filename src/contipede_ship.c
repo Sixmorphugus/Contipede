@@ -126,5 +126,5 @@ void cont_ship_draw()
 
 void cont_ship_fire()
 {
-	cont_bullet_create('*', 1, ship_y - 1, ship_x, -1, 0);
+	cont_bullet_create('*', 1, ship_y - 1, ship_x, -20, 0);
 }
