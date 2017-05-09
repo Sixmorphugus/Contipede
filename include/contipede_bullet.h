@@ -52,3 +52,4 @@ void cont_bullets_draw();
 // bullet collision
 int cont_bullet_hit_screenedge(int id);
 int cont_bullet_hit_ship(int id);
+int cont_bullet_hit_debris(int id);

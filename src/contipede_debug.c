@@ -1,4 +1,5 @@
 #include "curses.h"
+#include <string.h>
 #include "contipede_debug.h"
 #include "contipede_colorpairs.h"
 

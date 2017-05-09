@@ -4,5 +4,9 @@
 enum {
 	cont_colorpair_unused = 0, // you CANNOT use pair 0 in curses
 	cont_colorpair_debug,
-	cont_colorpair_bullet
+	cont_colorpair_bullet,
+	cont_colorpair_debris_dmgnone,
+	cont_colorpair_debris_dmg1,
+	cont_colorpair_debris_dmg2,
+	cont_colorpair_debris_dmg3
 };
