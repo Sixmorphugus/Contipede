@@ -8,6 +8,7 @@
 
 #include "contipede_bullet.h"
 #include "contipede_ship.h" // for ship collision
+#include "contipede_debris.h" // for debris collision
 #include "contipede_debug.h"
 #include "contipede_colorpairs.h"
 #include "contipede_timer.h"
@@ -225,8 +226,15 @@ void cont_bullet_update(int id)
 		//cont_debug("boop");
 	}
 
-	if (cont_bullet_hit_screenedge(id))
+	int s = cont_bullet_hit_screenedge(id);
+	int d = cont_bullet_hit_debris(id);
+
+	if (s != -1)
 		cont_bullet_destroy(id);
+	else if (d != -1) {
+		cont_bullet_destroy(id);
+		cont_debris_inc_health(d, -1);
+	}
 }
 
 void cont_bullet_draw(int id)
@@ -269,7 +277,7 @@ void cont_bullets_draw()
 int cont_bullet_hit_screenedge(int id)
 {
 	if (!cont_bullet_exists(id))
-		return 0;
+		return -1;
 
 	int x = bullet_data_array[id].x;
 	int y = bullet_data_array[id].y;
@@ -278,7 +286,30 @@ int cont_bullet_hit_screenedge(int id)
 		return 1;
 	}
 
-	return 0;
+	return -1;
+}
+
+int cont_bullet_hit_debris(int id)
+{
+	if (!cont_bullet_exists(id))
+		return -1;
+
+	int x = bullet_data_array[id].x;
+	int y = bullet_data_array[id].y;
+
+	for (int i = 0; i < cont_alldebris_get_limit(); i++) {
+		if (!cont_debris_exists(i))
+			continue;
+
+		int xx = cont_debris_get_x(i);
+		int yy = cont_debris_get_y(i);
+
+		if (x == xx && y == yy) {
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 int cont_bullet_get_friendly(int id)

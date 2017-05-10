@@ -39,3 +39,8 @@ int cont_plat_timeout_from_speed(int speed)
 
 	return 1000 / abs(speed);
 }
+
+void cont_plat_beep()
+{
+	//mvprintw(0, getmaxx()-1, "\a"); removed in windows 10
+}

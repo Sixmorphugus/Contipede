@@ -2,12 +2,14 @@
 // Main Function file
 
 #include "curses.h"
+#include <time.h>
 #include "main.h"
 
 #include "contipede_timer.h"
 #include "contipede_platform.h"
 #include "contipede_ship.h"
 #include "contipede_bullet.h"
+#include "contipede_debris.h"
 #include "contipede_debug.h"
 
 int main() {
@@ -24,9 +26,13 @@ int main() {
 	cont_timers_init();
 	cont_ship_init();
 	cont_bullets_init();
+	cont_alldebris_init();
+
 	cont_debug_init();
 
 	cont_debug("Contipede test version");
+
+	cont_alldebris_generaterandom((int)time(0), cont_alldebris_get_limit());
 
 	// the game loop is as follows:
 	while (update()) {
@@ -51,6 +57,7 @@ int update() {
 	cont_timers_update();
 	cont_ship_update();
 	cont_bullets_update();
+	cont_alldebris_update();
 
 	// wait before processing another game tick
 	cont_plat_waitms(cont_plat_get_frametime());
@@ -62,6 +69,7 @@ void draw() {
 
 	cont_ship_draw();
 	cont_bullets_draw();
+	cont_alldebris_draw();
 
 	cont_debug_draw();
 

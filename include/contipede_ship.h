@@ -20,19 +20,19 @@ void cont_ship_sendch(int ch); // respond to input (moving, firing etc)
 void cont_ship_update(); // check if the ship can be where it is, 
 
 // Ship Positioning Functions
-void cont_ship_setx(int x);
-void cont_ship_sety(int y);
-void cont_ship_setyx(int y, int x);
+void cont_ship_set_x(int x);
+void cont_ship_set_y(int y);
+void cont_ship_set_yx(int y, int x);
 
-void cont_ship_moveh(int x);
-void cont_ship_movev(int y);
-void cont_ship_movevh(int v, int h);
+void cont_ship_move_h(int x);
+void cont_ship_move_v(int y);
+void cont_ship_move_vh(int v, int h);
 
-int cont_ship_getx();
-int cont_ship_gety();
+int cont_ship_get_x();
+int cont_ship_get_y();
 
 // ship state
-int ship_state_get();
+int ship_get_state();
 void ship_state_set(int st);
 
 // drawing
