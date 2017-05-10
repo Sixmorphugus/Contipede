@@ -19,12 +19,12 @@ void cont_bullet_movev(int id, int v);
 void cont_bullet_movevh(int id, int v, int h);
 
 // speed
-int cont_bullet_get_hspeed(int id);
-int cont_bullet_get_vspeed(int id);
+double cont_bullet_get_hspeed(int id);
+double cont_bullet_get_vspeed(int id);
 
-void cont_bullet_set_hspeed(int id, int h);
-void cont_bullet_set_vspeed(int id, int v);
-void cont_bullet_set_vhspeed(int id, int v, int h);
+void cont_bullet_set_hspeed(int id, double h);
+void cont_bullet_set_vspeed(int id, double v);
+void cont_bullet_set_vhspeed(int id, double v, double h);
 
 // other
 int cont_bullet_get_friendly(int id);
@@ -36,7 +36,7 @@ void cont_bullet_set_icon(int id, char icon);
 // bullet management
 void cont_bullets_init();
 
-int cont_bullet_create(char icon, int friendly, int y, int x, int vS, int hS);
+int cont_bullet_create(char icon, int friendly, int y, int x, double vS, double hS);
 int cont_bullet_exists(int id);
 int cont_bullets_get_count();
 int cont_bullets_get_limit();

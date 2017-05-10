@@ -17,7 +17,7 @@
 // bullet data structure and storage
 typedef struct {
 	char icon;
-	int hSpeed, vSpeed;
+	double hSpeed, vSpeed;
 	int hTimer, vTimer;
 	int x, y;
 	int friendlyBullet;
@@ -92,7 +92,7 @@ void cont_bullet_movevh(int id, int v, int h)
 	bullet_data_array[id].x += h;
 }
 
-int cont_bullet_get_hspeed(int id)
+double cont_bullet_get_hspeed(int id)
 {
 	if (!cont_bullet_exists(id))
 		return 0;
@@ -100,7 +100,7 @@ int cont_bullet_get_hspeed(int id)
 	return bullet_data_array[id].hSpeed;
 }
 
-int cont_bullet_get_vspeed(int id)
+double cont_bullet_get_vspeed(int id)
 {
 	if (!cont_bullet_exists(id))
 		return 0;
@@ -108,7 +108,7 @@ int cont_bullet_get_vspeed(int id)
 	return bullet_data_array[id].vSpeed;
 }
 
-void cont_bullet_set_hspeed(int id, int h)
+void cont_bullet_set_hspeed(int id, double h)
 {
 	if (!cont_bullet_exists(id))
 		return;
@@ -117,7 +117,7 @@ void cont_bullet_set_hspeed(int id, int h)
 	cont_timer_set(bullet_data_array[id].hTimer, cont_plat_timeout_from_speed(h));
 }
 
-void cont_bullet_set_vspeed(int id, int v)
+void cont_bullet_set_vspeed(int id, double v)
 {
 	if (!cont_bullet_exists(id))
 		return;
@@ -126,7 +126,7 @@ void cont_bullet_set_vspeed(int id, int v)
 	cont_timer_set(bullet_data_array[id].vTimer, cont_plat_timeout_from_speed(v));
 }
 
-void cont_bullet_set_vhspeed(int id, int v, int h)
+void cont_bullet_set_vhspeed(int id, double v, double h)
 {
 	cont_bullet_set_vspeed(id, v);
 	cont_bullet_set_hspeed(id, h);
@@ -141,7 +141,7 @@ void cont_bullets_init()
 	init_pair(cont_colorpair_bullet, BULLET_COLOR, COLOR_BLACK);
 }
 
-int cont_bullet_create(char icon, int friendly, int y, int x, int vS, int hS)
+int cont_bullet_create(char icon, int friendly, int y, int x, double vS, double hS)
 {
 	// find first empty bullet slot
 	for (unsigned int i = 0; i < BULLET_LIMIT; i++) {
@@ -220,9 +220,9 @@ void cont_bullet_update(int id)
 
 	// move bullet on
 	if (cont_timer_finished_reset(b->hTimer))
-		b->x += b->hSpeed;
+		b->x += (int)b->hSpeed;
 	if (cont_timer_finished_reset(b->vTimer)) {
-		b->y += b->vSpeed;
+		b->y += (int)b->vSpeed;
 		//cont_debug("boop");
 	}
 

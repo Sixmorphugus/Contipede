@@ -24,7 +24,7 @@ int cont_plat_get_frametime() {
 	return FRAMETIME;
 }
 
-int cont_plat_speed_increment(int input)
+int cont_plat_speed_increment(double input)
 {
 	if (input > 0) return 1;
 	if (input < 0) return -1;
@@ -32,12 +32,12 @@ int cont_plat_speed_increment(int input)
 	return 0;
 }
 
-int cont_plat_timeout_from_speed(int speed)
+int cont_plat_timeout_from_speed(double speed)
 {
 	if (speed == 0)
 		return 0;
 
-	return 1000 / abs(speed);
+	return (int)(1000.0 / fabs(speed));
 }
 
 void cont_plat_beep()

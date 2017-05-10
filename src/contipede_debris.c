@@ -12,7 +12,7 @@
 #include "contipede_ship.h"
 
 // DEFINITIONS
-#define DEBRIS_LIMIT 75
+#define DEBRIS_LIMIT 80
 #define DEBRIS_DMGCOLOR0 COLOR_WHITE
 #define DEBRIS_DMGCOLOR1 COLOR_BLUE
 #define DEBRIS_DMGCOLOR2 COLOR_MAGENTA
@@ -290,8 +290,8 @@ void cont_debris_update(int id)
 				double thisCircBlit = circBlit * i;
 
 				// convert said angle to a direction
-				int xSpd = (int)(cos(thisCircBlit) * 10);
-				int ySpd = (int)(sin(thisCircBlit) * 10);
+				double xSpd = (int)(cos(thisCircBlit) * 10);
+				double ySpd = (int)(sin(thisCircBlit) * 10);
 
 				// create bullet
 				cont_bullet_create('\'', 0, y, x, ySpd, xSpd);
