@@ -59,6 +59,8 @@ int update() {
 	cont_bullets_update();
 	cont_alldebris_update();
 
+	cont_debug_update();
+
 	// wait before processing another game tick
 	cont_plat_waitms(cont_plat_get_frametime());
 	return 1;

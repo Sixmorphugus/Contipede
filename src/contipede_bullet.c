@@ -1,5 +1,5 @@
 // DEFS
-#define BULLET_LIMIT 100
+#define BULLET_LIMIT 1000
 #define BULLET_COLOR COLOR_CYAN
 
 // included files

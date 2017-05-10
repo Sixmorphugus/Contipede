@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 // data
-#define TIMER_LIMIT 500
+#define TIMER_LIMIT 2000
 
 typedef struct {
 	int remaining; // remaining time on timer

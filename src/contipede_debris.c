@@ -12,7 +12,7 @@
 #include "contipede_ship.h"
 
 // DEFINITIONS
-#define DEBRIS_LIMIT 100
+#define DEBRIS_LIMIT 75
 #define DEBRIS_DMGCOLOR0 COLOR_WHITE
 #define DEBRIS_DMGCOLOR1 COLOR_BLUE
 #define DEBRIS_DMGCOLOR2 COLOR_MAGENTA
@@ -287,7 +287,7 @@ void cont_debris_update(int id)
 			double circBlit = (M_PI * 2.0) / (double)d;
 			for (int i = 0; i < d; i++) {
 				// find the relative angle at which this debris is fired outwards
-				int thisCircBlit = circBlit * i;
+				double thisCircBlit = circBlit * i;
 
 				// convert said angle to a direction
 				int xSpd = (int)(cos(thisCircBlit) * 10);
