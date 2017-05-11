@@ -8,7 +8,7 @@
 // centipede management
 void cont_centipedes_init();
 
-int cont_centipede_create(int y, int x, int length, double basespeed);
+int cont_centipede_create(int y, int x, int movedir, int length, double basespeed);
 int cont_centipede_exists(int id);
 int cont_centipedes_get_count();
 int cont_centipedes_get_limit();
@@ -32,16 +32,21 @@ void cont_centipede_set_x(int id, int x);
 void cont_centipede_set_y(int id, int y);
 void cont_centipede_set_yx(int id, int y, int x);
 
+// note: moving the centipede with these functions will push to the previous position list
 void cont_centipede_move_h(int id, int h);
 void cont_centipede_move_v(int id, int v);
 void cont_centipede_move_vh(int id, int v, int h);
 
 // tail
 void cont_centipede_split(int id, int at);
-void cont_centipede_tail_pos(int id, int at);
+void cont_centipede_tail_x(int id, int at);
+void cont_centipede_tail_y(int id, int at);
+
+void cont_centipede_push_tail(int id, int x, int y);
 
 void cont_centipede_set_length(int id, int length);
 void cont_centipede_set_basespeed(int id, double basespeed);
 
 int cont_centipede_get_length(int id);
+int cont_centipedes_get_length_limit();
 double cont_centipede_get_basespeed(int id);
