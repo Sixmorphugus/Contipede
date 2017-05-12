@@ -230,11 +230,33 @@ void cont_bullet_update(int id)
 	int s = cont_bullet_hit_screenedge(id);
 	int d = cont_bullet_hit_debris(id);
 
+	int ch = cont_bullet_hit_centipede(id);
+	int ct = cont_bullet_hit_centipede_tail(id);
+
 	if (s != -1)
 		cont_bullet_destroy(id);
 	else if (d != -1) {
 		cont_bullet_destroy(id);
 		cont_debris_inc_health(d, -1);
+	}
+	else if (ch != -1) {
+		cont_bullet_destroy(id);
+		cont_centipede_destroy(ch);
+	}
+	else if (ct != -1) {
+		// get the tail position the bullet actually hit
+		int l = cont_centipede_get_length(ct);
+		int at = l / 2;
+
+		for (int i = 0; i < l; i++) {
+			if (cont_centipede_get_tail_x(ct, i) == b->x && cont_centipede_get_tail_y(ct, i) == b->y) {
+				at = i;
+			}
+		}
+
+		cont_bullet_destroy(id);
+
+		cont_centipede_split(ch, at);
 	}
 }
 
@@ -348,11 +370,13 @@ int cont_bullet_hit_centipede_tail(int id)
 		if (!cont_centipede_exists(i))
 			continue;
 
-		int xx = cont_centipede_get_x(i);
-		int yy = cont_centipede_get_y(i);
+		for (int j = 0; j < cont_centipede_get_length(i); j++) {
+			int xx = cont_centipede_get_tail_x(i, j);
+			int yy = cont_centipede_get_tail_y(i, j);
 
-		if (x == xx && y == yy) {
-			return i;
+			if (x == xx && y == yy) {
+				return i;
+			}
 		}
 	}
 

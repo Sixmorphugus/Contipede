@@ -252,7 +252,12 @@ void cont_centipede_split(int id, int at)
 
 	int newC = cont_centipede_create(centipede_data_array[id].prevY[at], centipede_data_array[id].prevX[at], !centipede_data_array[id].mvDir, centipede_data_array[id].length - at, centipede_data_array[id].basespeed);
 
-	centipede_data_array[id].length = at-1;
+	centipede_data_array[id].length -= at;
+
+	char str[50];
+	sprintf(str, "Centipede split at %i, new length %i", at, centipede_data_array[id].length);
+	cont_debug(str);
+
 	cont_centipede_timer_reset(id);
 }
 
