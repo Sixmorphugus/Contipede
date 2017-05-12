@@ -242,6 +242,8 @@ void cont_bullet_update(int id)
 	else if (ch != -1) {
 		cont_bullet_destroy(id);
 		cont_centipede_destroy(ch);
+
+		cont_debug("HEAD SHOT.");
 	}
 	else if (ct != -1) {
 		// get the tail position the bullet actually hit
@@ -256,7 +258,7 @@ void cont_bullet_update(int id)
 
 		cont_bullet_destroy(id);
 
-		cont_centipede_split(ch, at);
+		cont_centipede_split(ct, at);
 	}
 }
 

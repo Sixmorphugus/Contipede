@@ -6,7 +6,7 @@
 #include "contipede_timer.h"
 #include "contipede_platform.h"
 
-#define SHIP_FIRING_DELAY 100
+#define SHIP_FIRING_DELAY 200
 
 // -- SHIP GLOBAL VARIABLES --
 // only accessable within this C file

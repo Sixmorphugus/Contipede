@@ -56,6 +56,8 @@ double cont_centipede_get_speed(int id);
 
 double cont_centipede_speed(double basespeed, int length);
 
+void cont_centipedes_reset_next_length();
+
 // hit
 int cont_centipede_hit_debris(int id);
 int cont_centipede_hit_ship(int id);

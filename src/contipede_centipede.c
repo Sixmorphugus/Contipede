@@ -1,5 +1,7 @@
 #include "curses.h"
 
+#include <stdlib.h>
+
 #include "contipede_centipede.h"
 #include "contipede_colorpairs.h"
 #include "contipede_timer.h"
@@ -9,7 +11,9 @@
 
 // some constants!
 #define CENTIPEDE_LIMIT 100
-#define CENTIPEDE_LENGTH_LIMIT 50
+#define CENTIPEDE_LENGTH_LIMIT 100
+#define CENTIPEDE_START_LENGTH 10
+#define CENTIPEDE_DEATH_LENGTH 3
 
 #define CENTIPEDE_COLOR COLOR_GREEN
 
@@ -27,6 +31,7 @@ typedef struct {
 	int prevY[CENTIPEDE_LENGTH_LIMIT];
 } centipede_data;
 
+int centipedes_next_length;
 centipede_data centipede_data_array[CENTIPEDE_LIMIT];
 
 void cont_centipedes_init()
@@ -36,6 +41,8 @@ void cont_centipedes_init()
 	for (int i = 0; i < CENTIPEDE_LIMIT; i++) {
 		centipede_data_array[i].used = 0;
 	}
+
+	cont_centipedes_reset_next_length();
 }
 
 int cont_centipede_create(int y, int x, int movedir, int length, double basespeed)
@@ -43,7 +50,7 @@ int cont_centipede_create(int y, int x, int movedir, int length, double basespee
 	for (int i = 0; i < CENTIPEDE_LIMIT; i++) {
 		if (!cont_centipede_exists(i)) {
 			if (length > CENTIPEDE_LENGTH_LIMIT) {
-				cont_debug("Given centipede length is illegal - trimmed");
+				//cont_debug("Given centipede length is illegal - trimmed");
 				length = CENTIPEDE_LENGTH_LIMIT;
 			}
 
@@ -105,6 +112,7 @@ void cont_centipede_destroy(int id)
 	if (!cont_centipede_exists(id))
 		return;
 
+	cont_timer_destroy(centipede_data_array[id].moveTimer);
 	centipede_data_array[id].used = 0;
 }
 
@@ -115,6 +123,10 @@ void cont_centipede_update(int id)
 
 	if (cont_timer_finished_reset(centipede_data_array[id].moveTimer)) {
 		cont_centipede_move_h(id, centipede_data_array[id].mvDir ? 1 : -1);
+	}
+
+	if (centipede_data_array[id].length <= CENTIPEDE_DEATH_LENGTH) {
+		cont_centipede_destroy(id);
 	}
 }
 
@@ -147,6 +159,21 @@ void cont_centipedes_update()
 {
 	for (int i = 0; i < CENTIPEDE_LIMIT; i++) {
 		cont_centipede_update(i);
+	}
+
+	if (cont_centipedes_get_count() == 0) {
+		int r = rand() % 2;
+		int sx = 0;
+
+		if (r)
+			sx = getmaxx(stdscr) - 2;
+
+		cont_centipede_create(0, 0, 1, centipedes_next_length, centipedes_next_length*1.5);
+		centipedes_next_length *= 1.4;
+
+		if (centipedes_next_length > CENTIPEDE_LENGTH_LIMIT) {
+			centipedes_next_length = CENTIPEDE_LENGTH_LIMIT;
+		}
 	}
 }
 
@@ -247,16 +274,16 @@ void cont_centipede_move_vh(int id, int v, int h)
 
 void cont_centipede_split(int id, int at)
 {
+	char str[50];
+	sprintf(str, "Centipede split at %i/%i, new length %i", at, centipede_data_array[id].length, centipede_data_array[id].length - at);
+	//cont_debug(str);
+
 	if (at >= cont_centipede_get_length(id))
 		return;
 
 	int newC = cont_centipede_create(centipede_data_array[id].prevY[at], centipede_data_array[id].prevX[at], !centipede_data_array[id].mvDir, centipede_data_array[id].length - at, centipede_data_array[id].basespeed);
 
 	centipede_data_array[id].length -= at;
-
-	char str[50];
-	sprintf(str, "Centipede split at %i, new length %i", at, centipede_data_array[id].length);
-	cont_debug(str);
 
 	cont_centipede_timer_reset(id);
 }
@@ -309,6 +336,11 @@ double cont_centipede_get_speed(int id)
 double cont_centipede_speed(double basespeed, int length)
 {
 	return basespeed / (length / 4);
+}
+
+void cont_centipedes_reset_next_length()
+{
+	centipedes_next_length = CENTIPEDE_START_LENGTH;
 }
 
 int cont_centipede_hit_debris(int id)
