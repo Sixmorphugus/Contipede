@@ -13,6 +13,7 @@
 #include "contipede_colorpairs.h"
 #include "contipede_timer.h"
 #include "contipede_platform.h"
+#include "contipede_centipede.h"
 
 // bullet data structure and storage
 typedef struct {
@@ -303,6 +304,52 @@ int cont_bullet_hit_debris(int id)
 
 		int xx = cont_debris_get_x(i);
 		int yy = cont_debris_get_y(i);
+
+		if (x == xx && y == yy) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int cont_bullet_hit_centipede(int id)
+{
+	if (!cont_bullet_exists(id))
+		return -1;
+
+	int x = bullet_data_array[id].x;
+	int y = bullet_data_array[id].y;
+
+	for (int i = 0; i < cont_centipedes_get_limit(); i++) {
+		if (!cont_centipede_exists(i))
+			continue;
+
+		int xx = cont_centipede_get_x(i);
+		int yy = cont_centipede_get_y(i);
+
+		if (x == xx && y == yy) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int cont_bullet_hit_centipede_tail(int id)
+{
+	if (!cont_bullet_exists(id))
+		return -1;
+
+	int x = bullet_data_array[id].x;
+	int y = bullet_data_array[id].y;
+
+	for (int i = 0; i < cont_centipedes_get_limit(); i++) {
+		if (!cont_centipede_exists(i))
+			continue;
+
+		int xx = cont_centipede_get_x(i);
+		int yy = cont_centipede_get_y(i);
 
 		if (x == xx && y == yy) {
 			return i;

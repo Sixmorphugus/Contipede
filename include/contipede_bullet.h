@@ -53,3 +53,5 @@ void cont_bullets_draw();
 int cont_bullet_hit_screenedge(int id);
 int cont_bullet_hit_ship(int id);
 int cont_bullet_hit_debris(int id);
+int cont_bullet_hit_centipede(int id);
+int cont_bullet_hit_centipede_tail(int id);
