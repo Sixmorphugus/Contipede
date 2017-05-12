@@ -42,7 +42,7 @@ void cont_centipede_split(int id, int at);
 void cont_centipede_tail_x(int id, int at);
 void cont_centipede_tail_y(int id, int at);
 
-void cont_centipede_push_tail(int id, int x, int y);
+void cont_centipede_push_tail(int id);
 
 void cont_centipede_set_length(int id, int length);
 void cont_centipede_set_basespeed(int id, double basespeed);
@@ -50,3 +50,10 @@ void cont_centipede_set_basespeed(int id, double basespeed);
 int cont_centipede_get_length(int id);
 int cont_centipedes_get_length_limit();
 double cont_centipede_get_basespeed(int id);
+double cont_centipede_get_speed(int id);
+
+double cont_centipede_speed(int basespeed, int length);
+
+// hit
+int cont_centipede_hit_debris(int id);
+int cont_centipede_hit_ship(int id);
