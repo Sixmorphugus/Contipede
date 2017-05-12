@@ -10,6 +10,7 @@
 #include "contipede_ship.h"
 #include "contipede_bullet.h"
 #include "contipede_debris.h"
+#include "contipede_centipede.h"
 #include "contipede_debug.h"
 
 int main() {
@@ -27,12 +28,14 @@ int main() {
 	cont_ship_init();
 	cont_bullets_init();
 	cont_alldebris_init();
+	cont_centipedes_init();
 
 	cont_debug_init();
 
 	cont_debug("Contipede test version");
 
-	cont_alldebris_generaterandom((int)time(0), cont_alldebris_get_limit());
+	//cont_alldebris_generaterandom((int)time(0), cont_alldebris_get_limit());
+	cont_centipede_create(0, 0, 1, 10, 50);
 
 	// the game loop is as follows:
 	while (update()) {
@@ -58,6 +61,7 @@ int update() {
 	cont_ship_update();
 	cont_bullets_update();
 	cont_alldebris_update();
+	cont_centipedes_update();
 
 	cont_debug_update();
 
@@ -72,6 +76,7 @@ void draw() {
 	cont_ship_draw();
 	cont_bullets_draw();
 	cont_alldebris_draw();
+	cont_centipedes_draw();
 
 	cont_debug_draw();
 
