@@ -59,3 +59,4 @@ double cont_centipede_speed(double basespeed, int length);
 // hit
 int cont_centipede_hit_debris(int id);
 int cont_centipede_hit_ship(int id);
+int cont_centipede_hit_screenedge_x(int id);

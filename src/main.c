@@ -34,8 +34,8 @@ int main() {
 
 	cont_debug("Contipede test version");
 
-	//cont_alldebris_generaterandom((int)time(0), cont_alldebris_get_limit());
-	cont_centipede_create(0, 0, 1, 10, 50);
+	cont_alldebris_generaterandom((int)time(0), cont_alldebris_get_limit());
+	cont_centipede_create(0, 0, 1, 10, 40);
 
 	// the game loop is as follows:
 	while (update()) {

@@ -5,10 +5,11 @@
 #include "contipede_timer.h"
 #include "contipede_platform.h"
 #include "contipede_debug.h"
+#include "contipede_debris.h"
 
 // some constants!
 #define CENTIPEDE_LIMIT 100
-#define CENTIPEDE_LENGTH_LIMIT 10
+#define CENTIPEDE_LENGTH_LIMIT 50
 
 #define CENTIPEDE_COLOR COLOR_GREEN
 
@@ -125,7 +126,7 @@ void cont_centipede_draw(int id)
 	attron(COLOR_PAIR(cont_colorpair_centipede));
 
 	// draw the tail (stop if length is over limit)
-	for (int i = 0; i < CENTIPEDE_LENGTH_LIMIT; i++) {
+	for (int i = 0; i < centipede_data_array[id].length && i < CENTIPEDE_LENGTH_LIMIT; i++) {
 		mvprintw(centipede_data_array[id].prevY[i], centipede_data_array[id].prevX[i], "o");
 	}
 
@@ -302,7 +303,42 @@ double cont_centipede_get_speed(int id)
 
 double cont_centipede_speed(double basespeed, int length)
 {
-	return basespeed / length;
+	return basespeed / (length / 4);
+}
+
+int cont_centipede_hit_debris(int id)
+{
+	if (!cont_centipede_exists(id))
+		return 0;
+
+	int x = centipede_data_array[id].x;
+	int y = centipede_data_array[id].y;
+
+	for (int i = 0; i < cont_alldebris_get_limit(); i++) {
+		int xx = cont_debris_get_x(i);
+		int yy = cont_debris_get_y(i);
+
+		if (x == xx && y == yy) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int cont_centipede_hit_screenedge_x(int id)
+{
+	if (!cont_centipede_exists(id))
+		return 0;
+
+	if (centipede_data_array[id].x < 0) {
+		return -centipede_data_array[id].x;
+	}
+	else if (centipede_data_array[id].x >= (getmaxx(stdscr) - 1)) {
+		return -(centipede_data_array[id].x - (getmaxx(stdscr) - 1));
+	}
+
+	return 0;
 }
 
 void cont_centipede_push_tail(int id)
@@ -310,7 +346,23 @@ void cont_centipede_push_tail(int id)
 	if (!cont_centipede_exists(id))
 		return;
 
-	for (int t = 1; t < CENTIPEDE_LENGTH_LIMIT; t++) {
+	int xO = cont_centipede_hit_screenedge_x(id);
+
+	if (xO != 0) {
+		centipede_data_array[id].x += xO;
+		centipede_data_array[id].y += 1;
+		centipede_data_array[id].mvDir = !centipede_data_array[id].mvDir;
+	}
+
+	int d = cont_centipede_hit_debris(id);
+
+	if (d != -1) {
+		centipede_data_array[id].y += 1;
+		centipede_data_array[id].x += centipede_data_array[id].mvDir == 1 ? -1 : 1;
+		centipede_data_array[id].mvDir = !centipede_data_array[id].mvDir;
+	}
+
+	for (int t = CENTIPEDE_LENGTH_LIMIT-1; t > 0; t--) {
 		centipede_data_array[id].prevX[t] = centipede_data_array[id].prevX[t - 1];
 		centipede_data_array[id].prevY[t] = centipede_data_array[id].prevY[t - 1];
 	}

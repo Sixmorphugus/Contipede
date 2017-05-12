@@ -139,7 +139,7 @@ void cont_ship_draw()
 void cont_ship_fire()
 {
 	if (cont_timer_finished_reset(ship_timeto_fire)) {
-		cont_bullet_create('*', 1, ship_y - 1, ship_x, -20, 0);
+		cont_bullet_create('*', 1, ship_y - 1, ship_x, -40, 0);
 		ship_fired = 1;
 	}
 }
