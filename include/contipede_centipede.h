@@ -42,6 +42,10 @@ void cont_centipede_split(int id, int at);
 int cont_centipede_get_tail_x(int id, int at);
 int cont_centipede_get_tail_y(int id, int at);
 
+void cont_centipede_set_tail_x(int id, int at, int x);
+void cont_centipede_set_tail_y(int id, int at, int y);
+void cont_centipede_set_tail_yx(int id, int at, int y, int x);
+
 void cont_centipede_push_tail(int id);
 
 void cont_centipede_set_length(int id, int length);

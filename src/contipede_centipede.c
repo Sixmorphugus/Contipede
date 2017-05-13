@@ -9,6 +9,7 @@
 #include "contipede_debug.h"
 #include "contipede_debris.h"
 #include "contipede_ship.h"
+#include "contipede_menu.h"
 
 // some constants!
 #define CENTIPEDE_LIMIT 100
@@ -130,9 +131,10 @@ void cont_centipede_update(int id)
 		cont_centipede_destroy(id);
 	}
 
-	if(cont_centipede_hit_ship(id) == 1) {
+	if(cont_centipede_hit_ship(id) == 1 && cont_ship_get_state() != ship_state_DEAD) {
 		cont_ship_set_state(ship_state_DEAD);
 		cont_menu_appear_after(2000);
+		cont_centipedes_reset_next_length();
 	}
 }
 
@@ -174,7 +176,7 @@ void cont_centipedes_update()
 		if (r)
 			sx = getmaxx(stdscr) - 2;
 
-		cont_centipede_create(0, 0, 1, centipedes_next_length, centipedes_next_length*1.5);
+		cont_centipede_create(0, sx, 1, centipedes_next_length, centipedes_next_length*1.5);
 		centipedes_next_length *= 1.4;
 
 		if (centipedes_next_length > CENTIPEDE_LENGTH_LIMIT) {
@@ -289,7 +291,11 @@ void cont_centipede_split(int id, int at)
 
 	int newC = cont_centipede_create(centipede_data_array[id].prevY[at], centipede_data_array[id].prevX[at], !centipede_data_array[id].mvDir, centipede_data_array[id].length - at, centipede_data_array[id].basespeed);
 
-	centipede_data_array[id].length -= at;
+	for (unsigned int i = 0; i < CENTIPEDE_LENGTH_LIMIT; i++) {
+		cont_centipede_set_tail_yx(newC, i, cont_centipede_get_tail_y(id, i), cont_centipede_get_tail_x(id, i));
+	}
+
+	centipede_data_array[id].length = at;
 
 	cont_centipede_timer_reset(id);
 }
@@ -397,6 +403,43 @@ int cont_centipede_hit_screenedge_x(int id)
 	}
 
 	return 0;
+}
+
+void cont_centipede_set_tail_x(int id, int at, int x)
+{
+	if (!cont_centipede_exists(id))
+		return;
+
+	if (at < 0 || at >= CENTIPEDE_LENGTH_LIMIT) {
+		return;
+	}
+
+	centipede_data_array[id].prevX[at] = x;
+}
+
+void cont_centipede_set_tail_y(int id, int at, int y)
+{
+	if (!cont_centipede_exists(id))
+		return;
+
+	if (at < 0 || at >= CENTIPEDE_LENGTH_LIMIT) {
+		return;
+	}
+
+	centipede_data_array[id].prevY[at] = y;
+}
+
+void cont_centipede_set_tail_yx(int id, int at, int y, int x)
+{
+	if (!cont_centipede_exists(id))
+		return;
+
+	if (at < 0 || at >= CENTIPEDE_LENGTH_LIMIT) {
+		return;
+	}
+
+	centipede_data_array[id].prevX[at] = x;
+	centipede_data_array[id].prevY[at] = y;
 }
 
 void cont_centipede_push_tail(int id)

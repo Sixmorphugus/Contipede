@@ -27,6 +27,14 @@ void cont_menu_init()
 
 void cont_menu_update()
 {
+	if (menu_appeartimer != -1) {
+		if (cont_timer_finished(menu_appeartimer)) {
+			menu_enabled = 1;
+			cont_timer_destroy(menu_appeartimer);
+			menu_appeartimer = -1;
+		}
+	}
+
 	if (!menu_enabled)
 		return;
 
@@ -34,14 +42,6 @@ void cont_menu_update()
 		menu_selected = 0;
 	else if (menu_selected < 0) {
 		menu_selected = 1;
-	}
-
-	if (menu_appeartimer != -1) {
-		if (cont_timer_finished(menu_appeartimer)) {
-			menu_enabled = 1;
-			cont_timer_destroy(menu_appeartimer);
-			menu_appeartimer = -1;
-		}
 	}
 }
 
