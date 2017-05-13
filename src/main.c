@@ -5,6 +5,7 @@
 #include <time.h>
 #include "main.h"
 
+#include "contipede_menu.h"
 #include "contipede_timer.h"
 #include "contipede_platform.h"
 #include "contipede_ship.h"
@@ -29,12 +30,13 @@ int main() {
 	cont_bullets_init();
 	cont_alldebris_init();
 	cont_centipedes_init();
+	cont_menu_init();
 
 	cont_debug_init();
 
-	cont_debug("Contipede test version");
+	//cont_debug("Contipede test version");
 
-	cont_alldebris_generaterandom((int)time(0), cont_alldebris_get_limit());
+	//cont_alldebris_generaterandom((int)time(0), cont_alldebris_get_limit());
 
 	// the game loop is as follows:
 	while (update()) {
@@ -50,10 +52,11 @@ int update() {
 	// handle input
 	int ch = getch();
 
-	if (ch == KEY_EXIT)
+	if (cont_menu_get_quit())
 		return 0;
 
 	cont_ship_sendch(ch);
+	cont_menu_sendch(ch);
 
 	// update things
 	cont_timers_update();
@@ -61,6 +64,7 @@ int update() {
 	cont_bullets_update();
 	cont_alldebris_update();
 	cont_centipedes_update();
+	cont_menu_update();
 
 	cont_debug_update();
 
@@ -76,6 +80,7 @@ void draw() {
 	cont_bullets_draw();
 	cont_alldebris_draw();
 	cont_centipedes_draw();
+	cont_menu_draw();
 
 	cont_debug_draw();
 

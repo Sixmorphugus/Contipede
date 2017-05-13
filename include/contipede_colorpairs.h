@@ -9,5 +9,6 @@ enum {
 	cont_colorpair_debris_dmg1,
 	cont_colorpair_debris_dmg2,
 	cont_colorpair_debris_dmg3,
-	cont_colorpair_centipede
+	cont_colorpair_centipede,
+	cont_colorpair_menuback
 };

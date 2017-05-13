@@ -32,8 +32,8 @@ int cont_ship_get_x();
 int cont_ship_get_y();
 
 // ship state
-int ship_get_state();
-void ship_state_set(int st);
+int cont_ship_get_state();
+void cont_ship_set_state(int st);
 
 // drawing
 void cont_ship_draw(); // draw the ship with curses. 

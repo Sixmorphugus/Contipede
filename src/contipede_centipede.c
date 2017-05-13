@@ -8,6 +8,7 @@
 #include "contipede_platform.h"
 #include "contipede_debug.h"
 #include "contipede_debris.h"
+#include "contipede_ship.h"
 
 // some constants!
 #define CENTIPEDE_LIMIT 100
@@ -128,6 +129,11 @@ void cont_centipede_update(int id)
 	if (centipede_data_array[id].length <= CENTIPEDE_DEATH_LENGTH) {
 		cont_centipede_destroy(id);
 	}
+
+	if(cont_centipede_hit_ship(id) == 1) {
+		cont_ship_set_state(ship_state_DEAD);
+		cont_menu_appear_after(2000);
+	}
 }
 
 void cont_centipede_draw(int id)
@@ -161,7 +167,7 @@ void cont_centipedes_update()
 		cont_centipede_update(i);
 	}
 
-	if (cont_centipedes_get_count() == 0) {
+	if (cont_centipedes_get_count() == 0 && cont_ship_get_state() == ship_state_NORMAL) {
 		int r = rand() % 2;
 		int sx = 0;
 
@@ -358,6 +364,21 @@ int cont_centipede_hit_debris(int id)
 		if (x == xx && y == yy) {
 			return i;
 		}
+	}
+
+	return -1;
+}
+
+int cont_centipede_hit_ship(int id)
+{
+	if (!cont_centipede_exists(id))
+		return 0;
+
+	int y = centipede_data_array[id].y;
+	int yy = cont_ship_get_y();
+
+	if (y == yy) {
+		return 1;
 	}
 
 	return -1;

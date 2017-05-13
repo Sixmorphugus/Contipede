@@ -24,7 +24,7 @@ void cont_ship_init()
 	ship_x = getmaxx(stdscr) / 2;
 	ship_y = getmaxy(stdscr) - 3;
 
-	ship_state = ship_state_NORMAL;
+	ship_state = ship_state_DEAD;
 	ship_timeto_fire = cont_timer_create(SHIP_FIRING_DELAY);
 	ship_fired = 0;
 
@@ -109,12 +109,12 @@ int cont_ship_get_y()
 	return ship_y;
 }
 
-int ship_get_state()
+int cont_ship_get_state()
 {
 	return ship_state;
 }
 
-void ship_state_set(int st)
+void cont_ship_set_state(int st)
 {
 	ship_state = st;
 }
