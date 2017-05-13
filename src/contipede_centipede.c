@@ -283,19 +283,20 @@ void cont_centipede_move_vh(int id, int v, int h)
 void cont_centipede_split(int id, int at)
 {
 	char str[50];
-	sprintf(str, "Centipede split at %i/%i, new length %i", at, centipede_data_array[id].length, centipede_data_array[id].length - at);
+	sprintf(str, "Centipede split at %i/%i, new length %i", at, centipede_data_array[id].length, at);
 	//cont_debug(str);
 
 	if (at >= cont_centipede_get_length(id))
 		return;
 
-	int newC = cont_centipede_create(centipede_data_array[id].prevY[at], centipede_data_array[id].prevX[at], !centipede_data_array[id].mvDir, centipede_data_array[id].length - at, centipede_data_array[id].basespeed);
+	int newC = cont_centipede_create(centipede_data_array[id].prevY[at], centipede_data_array[id].prevX[at], centipede_data_array[id].mvDir, at, centipede_data_array[id].basespeed);
 
 	for (unsigned int i = 0; i < CENTIPEDE_LENGTH_LIMIT; i++) {
 		cont_centipede_set_tail_yx(newC, i, cont_centipede_get_tail_y(id, i), cont_centipede_get_tail_x(id, i));
 	}
 
-	centipede_data_array[id].length = at;
+	centipede_data_array[id].mvDir = !centipede_data_array[id].mvDir;
+	centipede_data_array[id].length = centipede_data_array[id].length - at;
 
 	cont_centipede_timer_reset(id);
 }

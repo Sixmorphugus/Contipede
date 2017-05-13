@@ -14,6 +14,7 @@
 #include "contipede_timer.h"
 #include "contipede_platform.h"
 #include "contipede_centipede.h"
+#include "contipede_menu.h"
 
 // bullet data structure and storage
 typedef struct {
@@ -233,6 +234,8 @@ void cont_bullet_update(int id)
 	int ch = cont_bullet_hit_centipede(id);
 	int ct = cont_bullet_hit_centipede_tail(id);
 
+	int sh = cont_bullet_hit_ship(id);
+
 	if (s != -1)
 		cont_bullet_destroy(id);
 	else if (d != -1) {
@@ -259,6 +262,13 @@ void cont_bullet_update(int id)
 		cont_bullet_destroy(id);
 
 		cont_centipede_split(ct, at);
+	}
+	else if (sh != -1 && !bullet_data_array[id].friendlyBullet) {
+		cont_ship_set_state(ship_state_DEAD);
+		cont_bullet_destroy(id);
+		cont_centipedes_reset_next_length();
+
+		cont_menu_appear_after(1000);
 	}
 }
 
@@ -308,6 +318,24 @@ int cont_bullet_hit_screenedge(int id)
 	int y = bullet_data_array[id].y;
 
 	if (x < 0 || x >= getmaxx(stdscr) || y < 0 || y >= getmaxy(stdscr)) {
+		return 1;
+	}
+
+	return -1;
+}
+
+int cont_bullet_hit_ship(int id)
+{
+	if (!cont_bullet_exists(id))
+		return -1;
+
+	int x = bullet_data_array[id].x;
+	int y = bullet_data_array[id].y;
+
+	int xx = cont_ship_get_x();
+	int yy = cont_ship_get_y();
+
+	if (y == yy && x >= xx - 1 && x <= xx + 1) {
 		return 1;
 	}
 
