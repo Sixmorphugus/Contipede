@@ -17,4 +17,8 @@ int cont_menu_get_enabled();
 
 int cont_menu_get_quit();
 
+void cont_menu_push_score(int hs);
+int cont_menu_get_score(int id);
+void cont_menu_get_score_count();
+
 void cont_menu_appear_after(int ms);

@@ -177,7 +177,7 @@ void cont_centipedes_update()
 			sx = getmaxx(stdscr) - 2;
 
 		cont_centipede_create(0, sx, 1, centipedes_next_length, centipedes_next_length*1.5);
-		centipedes_next_length *= 1.4;
+		centipedes_next_length = (int)((double)centipedes_next_length * 1.4);
 
 		if (centipedes_next_length > CENTIPEDE_LENGTH_LIMIT) {
 			centipedes_next_length = CENTIPEDE_LENGTH_LIMIT;

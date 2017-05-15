@@ -1,19 +1,24 @@
 #include "curses.h"
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
 
 #include "contipede_menu.h"
 #include "contipede_colorpairs.h"
 #include "contipede_ship.h"
 #include "contipede_debris.h"
 #include "contipede_timer.h"
+#include "contipede_centipede.h"
+#include "contipede_bullet.h"
 
 #define MENU_BGCOLOR COLOR_YELLOW
+#define MENU_NUM_SCORES 10
 
 int menu_selected;
 int menu_enabled;
 int menu_quit;
 int menu_appeartimer;
+int menu_highscores[MENU_NUM_SCORES];
 
 void cont_menu_init()
 {
@@ -21,6 +26,10 @@ void cont_menu_init()
 	menu_enabled = 1;
 	menu_quit = 0;
 	menu_appeartimer = -1;
+
+	for (int i = 0; i < MENU_NUM_SCORES; i++) {
+		menu_highscores[i] = 0;
+	}
 
 	init_pair(cont_colorpair_menuback, COLOR_WHITE, MENU_BGCOLOR);
 }
@@ -56,14 +65,21 @@ void cont_menu_draw()
 	mvprintw(5, (getmaxx(stdscr) / 2) - (strlen(title) / 2), title);
 	attroff(COLOR_PAIR(cont_colorpair_menuback));
 
+	for (int i = 0; i < MENU_NUM_SCORES; i++) {
+		char sc[10];
+		itoa(menu_highscores[i], sc, 10);
+
+		mvprintw(7+i, (getmaxx(stdscr) / 2) - (strlen(sc) / 2), sc);
+	}
+
 	char op1[] = "begin game";
 	char op1s[] = "[ BEGIN GAME ]";
 
 	char op2[] = "exit";
 	char op2s[] = "[ EXIT ]";
 
-	mvprintw(10, (getmaxx(stdscr) / 2) - (strlen(menu_selected == 0 ? op1s : op1) / 2), menu_selected == 0 ? op1s : op1);
-	mvprintw(12, (getmaxx(stdscr) / 2) - (strlen(menu_selected == 1 ? op2s : op2) / 2), menu_selected == 1 ? op2s : op2);
+	mvprintw(getmaxy(stdscr) - 5, (getmaxx(stdscr) / 2) - (strlen(menu_selected == 0 ? op1s : op1) / 2), menu_selected == 0 ? op1s : op1);
+	mvprintw(getmaxy(stdscr) - 3, (getmaxx(stdscr) / 2) - (strlen(menu_selected == 1 ? op2s : op2) / 2), menu_selected == 1 ? op2s : op2);
 }
 
 void cont_menu_sendch(int ch)
