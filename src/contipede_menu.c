@@ -12,7 +12,9 @@
 #include "contipede_bullet.h"
 
 #define MENU_BGCOLOR COLOR_YELLOW
-#define MENU_NUM_SCORES 10
+#define MENU_NUM_SCORES 9
+
+#define _CRT_SECURE_NO_WARNINGS
 
 int menu_selected;
 int menu_enabled;
@@ -66,10 +68,22 @@ void cont_menu_draw()
 	attroff(COLOR_PAIR(cont_colorpair_menuback));
 
 	for (int i = 0; i < MENU_NUM_SCORES; i++) {
-		char sc[10];
-		itoa(menu_highscores[i], sc, 10);
+		char sc[20];
 
-		mvprintw(7+i, (getmaxx(stdscr) / 2) - (strlen(sc) / 2), sc);
+		if(i < 10)
+			sprintf(sc, "%i: 00000%i", i+1, menu_highscores[i]);
+		else if(i < 100)
+			sprintf(sc, "%i: 0000%i", i + 1, menu_highscores[i]);
+		else if (i < 1000)
+			sprintf(sc, "%i: 000%i", i + 1, menu_highscores[i]);
+		else if (i < 10000)
+			sprintf(sc, "%i: 00%i", i + 1, menu_highscores[i]);
+		else if (i < 100000)
+			sprintf(sc, "%i: 0%i", i + 1, menu_highscores[i]);
+		else
+			sprintf(sc, "%i: %i", i + 1, menu_highscores[i]);
+
+		mvprintw(8+i, (getmaxx(stdscr) / 2) - (strlen(sc) / 2), sc);
 	}
 
 	char op1[] = "begin game";
@@ -78,8 +92,8 @@ void cont_menu_draw()
 	char op2[] = "exit";
 	char op2s[] = "[ EXIT ]";
 
-	mvprintw(getmaxy(stdscr) - 5, (getmaxx(stdscr) / 2) - (strlen(menu_selected == 0 ? op1s : op1) / 2), menu_selected == 0 ? op1s : op1);
-	mvprintw(getmaxy(stdscr) - 3, (getmaxx(stdscr) / 2) - (strlen(menu_selected == 1 ? op2s : op2) / 2), menu_selected == 1 ? op2s : op2);
+	mvprintw(8 + MENU_NUM_SCORES + 2, (getmaxx(stdscr) / 2) - (strlen(menu_selected == 0 ? op1s : op1) / 2), menu_selected == 0 ? op1s : op1);
+	mvprintw(8 + MENU_NUM_SCORES + 4, (getmaxx(stdscr) / 2) - (strlen(menu_selected == 1 ? op2s : op2) / 2), menu_selected == 1 ? op2s : op2);
 }
 
 void cont_menu_sendch(int ch)
