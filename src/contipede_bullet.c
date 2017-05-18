@@ -15,6 +15,7 @@
 #include "contipede_platform.h"
 #include "contipede_centipede.h"
 #include "contipede_menu.h"
+#include "contipede_ui.h"
 
 // bullet data structure and storage
 typedef struct {
@@ -243,6 +244,8 @@ void cont_bullet_update(int id)
 		cont_debris_inc_health(d, -1);
 	}
 	else if (ch != -1) {
+		cont_ui_inc_score(cont_centipede_get_length(ch) * 2);
+
 		cont_bullet_destroy(id);
 		cont_centipede_destroy(ch);
 

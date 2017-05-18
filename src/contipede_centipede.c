@@ -10,6 +10,7 @@
 #include "contipede_debris.h"
 #include "contipede_ship.h"
 #include "contipede_menu.h"
+#include "contipede_ui.h"
 
 // some constants!
 #define CENTIPEDE_LIMIT 100
@@ -128,6 +129,7 @@ void cont_centipede_update(int id)
 	}
 
 	if (centipede_data_array[id].length <= CENTIPEDE_DEATH_LENGTH) {
+		cont_ui_inc_score(cont_centipede_get_length(id));
 		cont_centipede_destroy(id);
 	}
 
@@ -285,6 +287,8 @@ void cont_centipede_split(int id, int at)
 	char str[50];
 	sprintf(str, "Centipede split at %i/%i, new length %i", at, centipede_data_array[id].length, at);
 	//cont_debug(str);
+
+	cont_ui_inc_score(1);
 
 	if (at >= cont_centipede_get_length(id))
 		return;

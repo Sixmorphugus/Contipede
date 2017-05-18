@@ -34,6 +34,9 @@ void cont_menu_init()
 	}
 
 	init_pair(cont_colorpair_menuback, COLOR_WHITE, MENU_BGCOLOR);
+
+	// load scorelist
+	cont_menu_loadscores();
 }
 
 void cont_menu_update()
@@ -70,18 +73,20 @@ void cont_menu_draw()
 	for (int i = 0; i < MENU_NUM_SCORES; i++) {
 		char sc[20];
 
-		if(i < 10)
-			sprintf(sc, "%i: 00000%i", i+1, menu_highscores[i]);
-		else if(i < 100)
-			sprintf(sc, "%i: 0000%i", i + 1, menu_highscores[i]);
-		else if (i < 1000)
-			sprintf(sc, "%i: 000%i", i + 1, menu_highscores[i]);
-		else if (i < 10000)
-			sprintf(sc, "%i: 00%i", i + 1, menu_highscores[i]);
-		else if (i < 100000)
-			sprintf(sc, "%i: 0%i", i + 1, menu_highscores[i]);
+		int ui_score = menu_highscores[i];
+
+		if (ui_score < 10)
+			sprintf(sc, "00000%i", ui_score);
+		else if (ui_score < 100)
+			sprintf(sc, "0000%i", ui_score);
+		else if (ui_score < 1000)
+			sprintf(sc, "000%i", ui_score);
+		else if (ui_score < 10000)
+			sprintf(sc, "00%i", ui_score);
+		else if (ui_score < 100000)
+			sprintf(sc, "0%i", ui_score);
 		else
-			sprintf(sc, "%i: %i", i + 1, menu_highscores[i]);
+			sprintf(sc, "%i", ui_score);
 
 		mvprintw(8+i, (getmaxx(stdscr) / 2) - (strlen(sc) / 2), sc);
 	}
@@ -112,6 +117,56 @@ void cont_menu_sendch(int ch)
 	}
 }
 
+void cont_menu_set_option(int op)
+{
+	menu_selected = op;
+}
+
+int cont_menu_get_option()
+{
+	return menu_selected;
+}
+
+void cont_menu_savescores()
+{
+	FILE* scorelist = fopen("scorelist.txt", "w");
+	
+	if (scorelist == NULL)
+	{
+		printf("Error opening scorelist.txt!\n");
+		return;
+	}
+
+	for (int i = 0; i < MENU_NUM_SCORES; i++) {
+		fprintf(scorelist, "%i\n", menu_highscores[i]);
+	}
+
+	fclose(scorelist);
+}
+
+void cont_menu_loadscores()
+{
+	FILE* scorelist = fopen("scorelist.txt", "r");
+
+	if (scorelist == NULL)
+	{
+		printf("Error opening scorelist.txt!\n");
+		return;
+	}
+
+	char line[8];
+	int score;
+
+	while (fgets(line, 80, scorelist) != NULL)
+	{
+		/* get a line, up to 80 chars from fr.  done if NULL */
+		sscanf(line, "%i", &score);
+		cont_menu_push_score(score);
+	}
+
+	fclose(scorelist);
+}
+
 void cont_menu_choose_option()
 {
 	if (menu_selected == 0) {
@@ -125,9 +180,20 @@ void cont_menu_choose_option()
 	}
 	else if (menu_selected == 1) {
 		menu_quit = 1;
+		cont_menu_savescores();
 	}
 
 	menu_enabled = 0;
+}
+
+void cont_menu_set_enabled(int enabled)
+{
+	menu_enabled = enabled;
+}
+
+int cont_menu_get_enabled()
+{
+	return menu_enabled;
 }
 
 int cont_menu_get_quit()
@@ -135,7 +201,40 @@ int cont_menu_get_quit()
 	return menu_quit;
 }
 
+void cont_menu_push_score(int hs)
+{
+	for (int i = 0; i < MENU_NUM_SCORES; i++) {
+		if (menu_highscores[i] < hs) {
+			// go down the table replacing scores
+			for (int t = MENU_NUM_SCORES - 1; t > i; t--) {
+				menu_highscores[t] = menu_highscores[t - 1];
+				menu_highscores[t] = menu_highscores[t - 1];
+			}
+
+			menu_highscores[i] = hs;
+			menu_highscores[i] = hs;
+
+			break;
+		}
+	}
+}
+
+int cont_menu_get_score(int id)
+{
+	if (id < 0 || id > MENU_NUM_SCORES)
+		return 0;
+
+	return menu_highscores[id];
+}
+
+void cont_menu_get_score_count()
+{
+	return MENU_NUM_SCORES;
+}
+
 void cont_menu_appear_after(int ms)
 {
 	menu_appeartimer = cont_timer_create(ms);
+	cont_menu_push_score(cont_ui_get_score());
+	cont_ui_set_score(0);
 }
