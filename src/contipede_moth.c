@@ -42,7 +42,7 @@ void cont_moth_init()
 void cont_moth_update()
 {
 	if (moth_state == moth_state_DEAD && cont_ship_get_state() != ship_state_DEAD) {
-		int ch = rand() % 1000;
+		int ch = rand() % 10000;
 
 		if (ch == 0) {
 			cont_moth_set_yx(0, rand() % getmaxx(stdscr) - 2);
