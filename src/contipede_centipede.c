@@ -35,6 +35,7 @@ typedef struct {
 } centipede_data;
 
 int centipedes_next_length;
+int centipede_round;
 centipede_data centipede_data_array[CENTIPEDE_LIMIT];
 
 void cont_centipedes_init()
@@ -184,6 +185,13 @@ void cont_centipedes_update()
 		if (centipedes_next_length > CENTIPEDE_LENGTH_LIMIT) {
 			centipedes_next_length = CENTIPEDE_LENGTH_LIMIT;
 		}
+
+		char rndTxt[50];
+		sprintf(rndTxt, "Round %i", centipede_round);
+
+		centipede_round++;
+
+		cont_debug(rndTxt);
 	}
 }
 
@@ -358,6 +366,7 @@ double cont_centipede_speed(double basespeed, int length)
 void cont_centipedes_reset_next_length()
 {
 	centipedes_next_length = CENTIPEDE_START_LENGTH;
+	centipede_round = 1;
 }
 
 int cont_centipede_hit_debris(int id)

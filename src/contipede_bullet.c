@@ -16,6 +16,7 @@
 #include "contipede_centipede.h"
 #include "contipede_menu.h"
 #include "contipede_ui.h"
+#include "contipede_moth.h"
 
 // bullet data structure and storage
 typedef struct {
@@ -237,6 +238,8 @@ void cont_bullet_update(int id)
 
 	int sh = cont_bullet_hit_ship(id);
 
+	int mo = cont_bullet_hit_moth(id);
+
 	if (s != -1)
 		cont_bullet_destroy(id);
 	else if (d != -1) {
@@ -272,6 +275,12 @@ void cont_bullet_update(int id)
 		cont_centipedes_reset_next_length();
 
 		cont_menu_appear_after(1000);
+	}
+	else if (mo != -1 && bullet_data_array[id].friendlyBullet) {
+		cont_moth_set_state(moth_state_DEAD);
+		cont_bullet_destroy(id);
+
+		cont_ui_inc_score(100);
 	}
 }
 
@@ -337,6 +346,24 @@ int cont_bullet_hit_ship(int id)
 
 	int xx = cont_ship_get_x();
 	int yy = cont_ship_get_y();
+
+	if (y == yy && x >= xx - 1 && x <= xx + 1) {
+		return 1;
+	}
+
+	return -1;
+}
+
+int cont_bullet_hit_moth(int id)
+{
+	if (!cont_bullet_exists(id))
+		return -1;
+
+	int x = bullet_data_array[id].x;
+	int y = bullet_data_array[id].y;
+
+	int xx = cont_moth_get_x();
+	int yy = cont_moth_get_y();
 
 	if (y == yy && x >= xx - 1 && x <= xx + 1) {
 		return 1;

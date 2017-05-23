@@ -14,6 +14,7 @@
 #include "contipede_centipede.h"
 #include "contipede_debug.h"
 #include "contipede_ui.h"
+#include "contipede_moth.h"
 
 int main() {
 	/* Start curses mode! */
@@ -31,6 +32,7 @@ int main() {
 	cont_bullets_init();
 	cont_alldebris_init();
 	cont_centipedes_init();
+	cont_moth_init();
 	cont_ui_init_score();
 	cont_menu_init();
 
@@ -66,6 +68,7 @@ int update() {
 	cont_bullets_update();
 	cont_alldebris_update();
 	cont_centipedes_update();
+	cont_moth_update();
 	cont_menu_update();
 
 	cont_debug_update();
@@ -82,6 +85,7 @@ void draw() {
 	cont_bullets_draw();
 	cont_alldebris_draw();
 	cont_centipedes_draw();
+	cont_moth_draw();
 	cont_ui_draw_score();
 	cont_menu_draw();
 

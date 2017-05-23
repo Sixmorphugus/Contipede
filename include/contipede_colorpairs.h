@@ -11,5 +11,6 @@ enum {
 	cont_colorpair_debris_dmg3,
 	cont_colorpair_centipede,
 	cont_colorpair_menuback,
-	cont_colorpair_score
+	cont_colorpair_score,
+	cont_colorpair_moth
 };
